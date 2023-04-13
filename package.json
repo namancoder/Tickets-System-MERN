@@ -1,0 +1,11 @@
+{
+  "name": "react-tickets-system",
+  "version": "1.0.0",
+  "description": "MERN stack tickets system",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "author": "NG",
+  "license": "MIT"
+}
