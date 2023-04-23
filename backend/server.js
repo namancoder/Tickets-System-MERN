@@ -16,9 +16,9 @@ app.use(express.json(), express.urlencoded({ extended: false }));
 app.use("/api/users/", router);
 app.use("/api/tickets/", ticketRouter);
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // to Serve Frontend when deploying
 if (process.env.NODE_ENV === "production") {
-  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   //Set build folder as Static
   app.use(express.static(path.join(__dirname, "../frontend/build")));
   app.get("*", (req, res) =>
