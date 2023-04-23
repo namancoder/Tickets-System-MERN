@@ -2,6 +2,7 @@ import express from "express";
 import * as dotenv from "dotenv";
 dotenv.config({ path: ".env" });
 import path from "path";
+import { fileURLToPath } from "url";
 import router from "./routes/userRoutes.js";
 import ticketRouter from "./routes/ticketRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
@@ -17,8 +18,8 @@ app.use("/api/tickets/", ticketRouter);
 
 // to Serve Frontend when deploying
 if (process.env.NODE_ENV === "production") {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
   //Set build folder as Static
-
   app.use(express.static(path.join(__dirname, "../frontend/build")));
   app.get("*", (req, res) =>
     res.sendFile(__dirname, "../", "frontend", "build", "index.html")
