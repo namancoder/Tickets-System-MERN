@@ -1,7 +1,7 @@
 import express from "express";
 import * as dotenv from "dotenv";
 dotenv.config({ path: ".env" });
-
+import path from "path";
 import router from "./routes/userRoutes.js";
 import ticketRouter from "./routes/ticketRoutes.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
@@ -14,6 +14,20 @@ app.use(express.json(), express.urlencoded({ extended: false }));
 
 app.use("/api/users/", router);
 app.use("/api/tickets/", ticketRouter);
+
+// to Serve Frontend when deploying
+if (process.env.NODE_ENV === "production") {
+  //Set build folder as Static
+
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
+  app.get("*", (req, res) =>
+    res.sendFile(__dirname, "../", "frontend", "build", "index.html")
+  );
+} else {
+  app.get("/", (req, res) => {
+    res.status(200).json({ message: " Welcome to the Support Desk API" });
+  });
+}
 app.use(errorHandler);
 
 app.listen(PORT, () => {
