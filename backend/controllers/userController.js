@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { User } from "../models/userModel.mjs";
+import { User } from "../models/userModel.js";
 
 // @desc Register a new user
 export const registerUser = asyncHandler(async (req, res) => {
@@ -42,6 +42,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
 // @desc Login a new user
 export const loginUser = asyncHandler(async (req, res) => {
+  console.log("login called");
   const { name, email, password } = req.body;
 
   const user = await User.findOne({ email });
@@ -57,6 +58,10 @@ export const loginUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid Creds");
   }
 });
+
+// @desc Get Me
+// @route /api/users/me
+// @access private
 export const getMe = asyncHandler(async (req, res) => {
   const user = {
     id: req.user._id,
