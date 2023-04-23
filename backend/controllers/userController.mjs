@@ -1,6 +1,8 @@
 import asyncHandler from "express-async-handler";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { User } from "../models/userModel.mjs";
+
 // @desc Register a new user
 export const registerUser = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -30,6 +32,7 @@ export const registerUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -38,6 +41,34 @@ export const registerUser = asyncHandler(async (req, res) => {
 });
 
 // @desc Login a new user
-export const loginUser = (req, res) => {
-  res.send("login Route");
+export const loginUser = asyncHandler(async (req, res) => {
+  const { name, email, password } = req.body;
+
+  const user = await User.findOne({ email });
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.status(201).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(401);
+    throw new Error("Invalid Creds");
+  }
+});
+export const getMe = asyncHandler(async (req, res) => {
+  const user = {
+    id: req.user._id,
+    email: req.user.email,
+    name: req.user.name,
+  };
+  res.status(200).json(user);
+});
+
+// GenerateToken
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET ?? "abc123", {
+    expiresIn: "15d",
+  });
 };
