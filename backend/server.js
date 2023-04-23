@@ -21,9 +21,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 if (process.env.NODE_ENV === "production") {
   //Set build folder as Static
   app.use(express.static(path.join(__dirname, "../frontend/build")));
-  app.get("*", (req, res, done) =>
-    res.sendFile(path.join(__dirname, "../frontend/build"))
-  );
+  // app.get("*", (req, res, done) =>
+  //   res.sendFile(path.join(__dirname, "../frontend/build"))
+  // );
 } else {
   app.get("/", (req, res) => {
     res.status(200).json({ message: " Welcome to the Support Desk API" });
